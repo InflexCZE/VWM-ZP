@@ -1,0 +1,7 @@
+require('./build/env.js')
+
+module.exports = {
+  config: './db/config.json',
+  migrationsPath: './db/migrations',
+  modelsPath: './src/models'
+}

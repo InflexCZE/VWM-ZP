@@ -1,0 +1,58 @@
+{
+  "private": true,
+  "name": "vwm-zp",
+  "version": "1.0.0",
+  "description": "VWM - Colaborative filtering",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc -w",
+    "db:migrate": "sequelize db:migrate",
+    "db:migrate:undo": "sequelize db:migrate:undo",
+    "migration:create": "sequelize migration:create",
+    "server": "node build/index.js",
+    "server:watch": "nodemon --watch build build/index.js",
+    "postinstall": "npm run build",
+    "prestart": "npm run db:migrate",
+    "start": "npm run server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/inflexcze/VWM-ZP.git"
+  },
+  "author": "Radomír Žemlička <info@razem.cz> (http://razem.cz)",
+  "contributors": [
+    "Martin Pavlíček"
+  ],
+  "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/inflexcze/VWM-ZP/issues"
+  },
+  "homepage": "https://github.com/inflexcze/VWM-ZP#readme",
+  "dependencies": {
+    "@types/dotenv": "^2.0.20",
+    "@types/koa": "^2.0.39",
+    "@types/koa-logger": "^2.0.2",
+    "@types/koa-router": "^7.0.22",
+    "@types/koa-session-minimal": "^3.0.4",
+    "@types/node": "^7.0.13",
+    "@types/sequelize": "^4.0.51",
+    "dotenv": "^4.0.0",
+    "koa": "^2.2.0",
+    "koa-logger": "^2.0.1",
+    "koa-router": "^7.1.1",
+    "koa-session-minimal": "^3.0.3",
+    "pg": "^6.1.5",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^3.30.4",
+    "sequelize-cli": "^2.7.0",
+    "typescript": "^2.2.2"
+  },
+  "engine": {
+    "node": ">=7.9.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}
