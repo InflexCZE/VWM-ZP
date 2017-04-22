@@ -4,6 +4,7 @@ import * as Sequelize from 'sequelize'
 
 import * as User from './def/user'
 import * as Movie from './def/movie'
+import * as Rating from './def/rating'
 
 const db: {
   [key: string]: any
@@ -12,6 +13,7 @@ const db: {
 
   User?: User.Model
   Movie?: Movie.Model
+  Rating?: Rating.Model
 } = {}
 
 const basename: string = path.basename(module.filename)

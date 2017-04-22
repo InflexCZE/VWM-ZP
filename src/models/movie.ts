@@ -3,7 +3,8 @@ export = function (sequelize: any, DataTypes: any) {
     name: DataTypes.STRING
   }, {
     classMethods: {
-      associate: function(models: any) {
+      associate: function (models: any) {
+        Model.hasMany(models.Rating, { as: 'ratings', foreignKey: 'movieId' })
       }
     }
   })
