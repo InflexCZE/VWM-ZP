@@ -1,7 +1,6 @@
 import * as X from '.'
 
 export interface Attributes extends X.Attributes {
-  id?: number
   name?: string
   password?: string
 }
