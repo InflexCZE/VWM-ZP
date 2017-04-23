@@ -16,3 +16,16 @@ DATABASE_URL=postgres://{USER}:{PASS}@127.0.0.1:5432/{DB}
 1. `npm run build:watch`
 2. `npm run server:watch`
 3. Open http://localhost:1337
+
+## Debugging
+Add to /.vscode/launch.json:
+```
+{
+  "name": "Node attach",
+  "type": "node",
+  "protocol": "inspector",
+  "request": "attach",
+  "port": 9229,
+  "restart": true
+}
+```
