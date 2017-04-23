@@ -4,8 +4,9 @@ module.exports = {
   up: function (queryInterface, Sequelize) {
     return queryInterface.addIndex(
       'Users',
-      ['name'],
+      [Sequelize.fn('LOWER', Sequelize.col('name'))],
       {
+        name: 'users_name',
         indicesType: 'UNIQUE'
       }
     );
@@ -14,7 +15,10 @@ module.exports = {
   down: function (queryInterface, Sequelize) {
     return queryInterface.removeIndex(
       'Users',
-      ['name']
+      ['name'],
+      {
+        name: 'users_name'
+      }
     );
   }
 };
