@@ -61,35 +61,6 @@ export function ComputeCorrelationCoefficient(xRatings : RatingInstance[], yRati
     const ratingsX = xRatings.map(x => x.value);
     const ratingsY = yRatings.map(x => x.value);
 
-    // xRatings.sort((a, b) => b.movieId - a.movieId);
-    // yRatings.sort((a, b) => b.movieId - a.movieId);
-
-    // let xIndex = 0, yIndex = 0;
-    // const ratingsX : number[] = [];
-    // const ratingsY : number[] = [];
-
-    // let i = 0, j = 0;
-    // while(i < xRatings.length && j < yRatings.length)
-    // {
-    //     let xRate = xRatings[i];
-    //     let yRate = yRatings[j];
-
-    //     let xMovie = xRate.movieId;
-    //     let yMovie = yRate.movieId;
-
-    //     if(xMovie == yMovie)
-    //     {
-    //         i++;
-    //         j++;
-    //         ratingsX.push(xRate.value);
-    //         ratingsY.push(yRate.value);
-    //     }
-    //     else if(xMovie < yMovie)
-    //         i++;
-    //     else
-    //         j++;
-    // }
-
     Assert(() => ratingsX.length == ratingsY.length);
 
     if(ratingsX.length == 0)

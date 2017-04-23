@@ -75,66 +75,10 @@ for(let x of data)
  
 </body>
 </html>`;
-    
-    // ctx.body = "";
-    // ctx.body += `${index}\n`;
-    // ctx.body += JSON.stringify(data);
-    
-    // const myBubbleChart = new Chart(ctx,
-    // {
-    //     type: 'bubble',
-    //     data: data,
-    //     options: 
-    //     {
-    //         elements: 
-    //         {
-    //             points: 
-    //             {
-    //                 borderWidth: 1,
-    //                 borderColor: 'rgb(0, 0, 0)'
-    //             }
-    //         }
-    //     }
-    // });
 });
 
 router.get('/', async function (ctx, next) {
   ctx.body = 'TODO \n';
-
-  //  const user= await User.findById(666);
-   
-  //  User.create
-  //  ({
-  //   name: "hFHKDKSJFhjKSD",
-  //   password: ""
-  //  });
-
-  //  User.create
-  //  ({
-  //     name: "fdasfsafdds2",
-  //     password: ""
-  //  });
-
-  const all = await User.findAll();
-  for(let x of all)
-  {
-      const user = await User.findById(666, {
-    include: [
-      {
-        model: Rating, as: 'ratings',
-        include: [
-          { model: Movie, as: 'movie' }
-        ]
-      }
-    ]
-  });
-
-
-    Rating.find({where: {userId: x.id}})
-    
-
-    ctx.body += `${x.name}\n`;
-  }
 })
 
 app.use(router.routes())
