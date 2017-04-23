@@ -1,3 +1,4 @@
+import config from '../config'
 import * as fs from 'fs'
 import * as path from 'path'
 import * as Sequelize from 'sequelize'
@@ -17,15 +18,14 @@ const db: {
 } = {}
 
 const basename: string = path.basename(module.filename)
-const env: string = process.env.NODE_ENV || 'development'
-const config = require('../../db/config.json')[env]
+const dbConfig = require('../../db/config.json')[config.nodeEnv]
 
 let sequelize: Sequelize.Sequelize
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config)
+if (dbConfig.use_env_variable) {
+  sequelize = new Sequelize(process.env[dbConfig.use_env_variable], dbConfig)
 }
 else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config)
+  sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig)
 }
 
 fs
