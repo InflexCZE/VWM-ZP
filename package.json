@@ -11,7 +11,7 @@
     "db:migrate:undo": "sequelize db:migrate:undo",
     "migration:create": "sequelize migration:create",
     "server": "node build/index.js",
-    "server:watch": "nodemon --watch build build/index.js",
+    "server:watch": "nodemon --watch build --inspect build/index.js",
     "crawler": "node build/scripts/crawler.js",
     "postinstall": "npm run build",
     "prestart": "npm run db:migrate",
