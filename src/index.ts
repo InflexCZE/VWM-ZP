@@ -13,7 +13,7 @@ app.use(KoaSession())
 
 const router = new KoaRouter()
 
-router.get('/Detail', async function (ctx, next) 
+router.get('/detail', async function (ctx, next) 
 {
   const id1 = ctx.query.id1;
   const id2 = ctx.query.id2;
@@ -53,9 +53,32 @@ router.get('/Detail', async function (ctx, next)
     const data = Pearson.MakeChartData(X, Y);
     const index = Pearson.ComputeCorrelationCoefficient(X, Y);
 
-    ctx.body = "";
-    ctx.body += `${index}\n`;
-    ctx.body += JSON.stringify(data);
+    ctx.body = `
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>${index}</h1>
+
+<svg width="600" height="600" style="border:1px solid #d3d3d3;" viewbox="-1 -1 7 7">
+`;
+
+for(let x of data)
+{
+  var q = x.data[0];
+  ctx.body += `<circle cx="${q.x}" cy="${q.y}" r="0.1" stroke="#000" stroke-width="0.05" fill="${x.backgroundColor}" />`;
+  ctx.body += `<text x="${q.x - 0.1}" y="${q.y + 0.3}" font-size="0.1" >${x.label}</text>`;
+}
+  
+  ctx.body +=  `Sorry, your browser does not support inline SVG.
+</svg>
+ 
+</body>
+</html>`;
+    
+    // ctx.body = "";
+    // ctx.body += `${index}\n`;
+    // ctx.body += JSON.stringify(data);
     
     // const myBubbleChart = new Chart(ctx,
     // {

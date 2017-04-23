@@ -118,7 +118,7 @@ export function MakeChartData(xRatings : RatingInstance[], yRatings : RatingInst
     for(let i = 0; i < xRatings.length; i++)
     {
         const x = xRatings[i];
-        const y = xRatings[i];
+        const y = yRatings[i];
 
         result[i] = 
         {
