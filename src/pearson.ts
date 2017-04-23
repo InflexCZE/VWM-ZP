@@ -12,8 +12,8 @@ export interface DataSet
 
 export function MakeRatingsDeduplication(xRatings : RatingInstance[], yRatings : RatingInstance[])
 {
-    xRatings.sort((a, b) => b.movieId - a.movieId);
-    yRatings.sort((a, b) => b.movieId - a.movieId);
+    xRatings.sort((a, b) => a.movieId - b.movieId);
+    yRatings.sort((a, b) => a.movieId - b.movieId);
 
     const toRemoveX : number[] = [];
     const toRemoveY : number[] = [];
@@ -37,6 +37,15 @@ export function MakeRatingsDeduplication(xRatings : RatingInstance[], yRatings :
         else
             toRemoveY.push(j++);
     }
+
+    while(i < xRatings.length)
+        toRemoveX.push(i++);
+
+    while(j < yRatings.length)
+        toRemoveY.push(j++);
+
+    console.log(`${xRatings.length}-${toRemoveX.length}=${xRatings.length-toRemoveX.length}`);
+    console.log(`${yRatings.length}-${toRemoveY.length}=${yRatings.length-toRemoveY.length}`);
 
     for(let i = toRemoveX.length - 1; i >= 0; i--)
         xRatings.splice(toRemoveX[i], 1);

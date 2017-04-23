@@ -52,6 +52,10 @@ router.get('/Detail', async function (ctx, next)
     Pearson.MakeRatingsDeduplication(X, Y);
     const data = Pearson.MakeChartData(X, Y);
     const index = Pearson.ComputeCorrelationCoefficient(X, Y);
+
+    ctx.body = "";
+    ctx.body += `${index}\n`;
+    ctx.body += JSON.stringify(data);
     
     // const myBubbleChart = new Chart(ctx,
     // {
