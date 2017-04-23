@@ -8,6 +8,7 @@
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
+    "sourceRoot": "src",
     "alwaysStrict": true,
     "rootDir": "src",
     "outDir": "build"
