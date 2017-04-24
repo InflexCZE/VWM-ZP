@@ -1,6 +1,6 @@
-import { sequelize, User, Rating, Movie } from './models'
-import { Instance as UserInstance } from './models/def/user'
-import { Instance as RatingInstance } from './models/def/rating'
+import { sequelize, User, Rating, Movie } from '../models'
+import { Instance as UserInstance } from '../models/def/user'
+import { Instance as RatingInstance } from '../models/def/rating'
 
 export interface DataSet
 {
@@ -91,7 +91,7 @@ export function MakeChartData(xRatings : RatingInstance[], yRatings : RatingInst
         const x = xRatings[i];
         const y = yRatings[i];
 
-        result[i] = 
+        result[i] =
         {
             label: x.movie.name,
             data: [ {x: x.value, y: y.value, r: 15} ],
@@ -128,5 +128,5 @@ function Assert(fn: () => boolean)
 {
   if (fn() === false)
     throw new Error(fn.toString());
-  
+
 }

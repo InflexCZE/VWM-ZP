@@ -1,0 +1,45 @@
+<h1><%= index %></h1>
+
+<canvas id="chart" width="600" height="600"></canvas>
+<script>
+var ctx = document.getElementById('chart')
+var chart = new Chart(ctx, {
+  type: 'bubble',
+  data: {
+    datasets: <%- JSON.stringify(data) %>
+  },
+  options: {
+    elements: {
+      points: {
+        borderWidth: 1,
+        borderColor: 'rgb(0, 0, 0)'
+      }
+    },
+    scales: {
+      xAxes: [{
+        type: 'linear',
+        ticks: {
+          beginAtZero: true,
+          max: 6
+        }
+      }],
+      yAxes: [{
+        type: 'linear',
+        ticks: {
+          beginAtZero: true,
+          max: 6
+        }
+      }]
+    },
+    tooltips: {
+      mode: 'point',
+      displayColors: false,
+      callbacks: {
+        label: function (tooltipItem, data) {
+          return data.datasets[tooltipItem.datasetIndex].label + ' (' + tooltipItem.xLabel + ', ' + tooltipItem.yLabel + ')'
+        }
+      }
+    }
+  }
+});
+</script>
