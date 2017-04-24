@@ -1,6 +1,12 @@
 <h1><%= index %></h1>
 
 <canvas id="chart" width="600" height="600"></canvas>
+
+<% for(const x of candidates)
+{ %>
+  <h2><%= x.movie.name %> : <%= x.value %></h2>
+<% } %>
+
 <script>
 var ctx = document.getElementById('chart')
 var chart = new Chart(ctx, {

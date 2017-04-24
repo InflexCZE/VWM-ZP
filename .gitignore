@@ -3,3 +3,4 @@
 /node.exe
 /.env
 /.vscode
+*.cmd

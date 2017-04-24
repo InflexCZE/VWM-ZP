@@ -33,13 +33,22 @@ router.get('/detail', async function (ctx, next) {
   const X = user1.ratings
   const Y = user2.ratings
 
-  Pearson.MakeRatingsDeduplication(X, Y)
+  let candidates = Pearson.MakeRatingsDeduplication(X, Y)
   const data = Pearson.MakeChartData(X, Y)
   const index = Pearson.ComputeCorrelationCoefficient(X, Y)
 
-  ctx.state = {
+  if(index > 0)
+    candidates = candidates.filter(x => x.value > 3);
+  else
+    candidates = candidates.filter(x => x.value < 3);
+
+  
+
+  ctx.state = 
+  {
     index,
-    data
+    data,
+    candidates
   }
 
   await ctx.render('detail')
