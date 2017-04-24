@@ -1,5 +1,5 @@
-node_modules
-node.exe
-.env
-build
-.vscode
+/node_modules
+/build
+/node.exe
+/.env
+/.vscode
