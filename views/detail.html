@@ -1,10 +1,45 @@
 <h1><%= index %></h1>
 
-<svg width="600" height="600" style="border: 1px solid #d3d3d3;" viewbox="-1 -1 7 7">
-  <% for (let x of data) { %>
-    <% const q = x.data[0] %>
-    <circle cx="<%= q.x %>" cy="<%= q.y %>" r="0.1" stroke="#000" stroke-width="0.05" fill="<%= x.backgroundColor %>" />
-    <text x="<%= q.x - 0.1 %>" y="<%= q.y + 0.3 %>" font-size="0.1" ><%= x.label %></text>
-  <% } %>
-  Sorry, your browser does not support inline SVG.
-</svg>
+<canvas id="chart" width="600" height="600"></canvas>
+<script>
+var ctx = document.getElementById('chart')
+var chart = new Chart(ctx, {
+  type: 'bubble',
+  data: {
+    datasets: <%- JSON.stringify(data) %>
+  },
+  options: {
+    elements: {
+      points: {
+        borderWidth: 1,
+        borderColor: 'rgb(0, 0, 0)'
+      }
+    },
+    scales: {
+      xAxes: [{
+        type: 'linear',
+        ticks: {
+          beginAtZero: true,
+          max: 6
+        }
+      }],
+      yAxes: [{
+        type: 'linear',
+        ticks: {
+          beginAtZero: true,
+          max: 6
+        }
+      }]
+    },
+    tooltips: {
+      mode: 'point',
+      displayColors: false,
+      callbacks: {
+        label: function (tooltipItem, data) {
+          return data.datasets[tooltipItem.datasetIndex].label + ' (' + tooltipItem.xLabel + ', ' + tooltipItem.yLabel + ')'
+        }
+      }
+    }
+  }
+});
+</script>
