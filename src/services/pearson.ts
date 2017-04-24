@@ -10,7 +10,7 @@ export interface DataSet
     data: {x:number, y:number, r:number}[]
 }
 
-export function MakeRatingsDeduplication(xRatings : RatingInstance[], yRatings : RatingInstance[])
+export function MakeRatingsDeduplication(xRatings : RatingInstance[], yRatings : RatingInstance[]) : RatingInstance[]
 {
     xRatings.sort((a, b) => a.movieId - b.movieId);
     yRatings.sort((a, b) => a.movieId - b.movieId);
@@ -47,13 +47,16 @@ export function MakeRatingsDeduplication(xRatings : RatingInstance[], yRatings :
     console.log(`${xRatings.length}-${toRemoveX.length}=${xRatings.length-toRemoveX.length}`);
     console.log(`${yRatings.length}-${toRemoveY.length}=${yRatings.length-toRemoveY.length}`);
 
+    const ret : RatingInstance[] = [];
+
     for(let i = toRemoveX.length - 1; i >= 0; i--)
         xRatings.splice(toRemoveX[i], 1);
 
     for(let i = toRemoveY.length - 1; i >= 0; i--)
-        yRatings.splice(toRemoveY[i], 1);
+        ret.push(yRatings.splice(toRemoveY[i], 1)[0]);
 
     Assert(() => xRatings.length == yRatings.length);
+    return ret;
 }
 
 export function ComputeCorrelationCoefficient(xRatings : RatingInstance[], yRatings : RatingInstance[])
