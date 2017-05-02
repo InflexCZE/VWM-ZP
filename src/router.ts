@@ -55,6 +55,37 @@ router.get('/detail', async function (ctx, next) {
   await ctx.render('detail')
 });
 
+router.get('/userdetail', async function (ctx, next) {
+  const userId : number = ctx.query.userId;
+  const user = await User.findById(userId);
+
+const res : {name:string}[] = await sequelize.query(
+  `SELECT r."movieId", m.name, rx."otherUserId", rx.rank, r.value, rx.rank * r.value AS product FROM "Ratings" r
+JOIN "Movies" m ON m.id = r."movieId"
+JOIN (
+  SELECT rx."otherUserId", rx.rank FROM "Ranks" rx
+  WHERE rx."userId" = :userId
+  ORDER BY rx.rank DESC
+  LIMIT :usersAmount
+) rx ON r."userId" = rx."otherUserId"
+WHERE NOT EXISTS (
+  SELECT 1 FROM "Ratings" ri
+  WHERE ri."userId" = :userId
+    AND ri."movieId" = r."movieId"
+)
+ORDER BY r.value * rx.rank DESC
+LIMIT :moviesAmount`,
+{ type: sequelize.QueryTypes.SELECT, replacements: { userId, usersAmount: 10, moviesAmount: 10 } });
+
+  ctx.state =
+  {
+    Movies: res,
+    UserName: user.name,
+  };
+
+  await ctx.render('userdetail');
+})
+
 router.get('/', async function (ctx, next) {
   await ctx.render('homepage')
 })
