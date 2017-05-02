@@ -61,9 +61,11 @@ export function MakeRatingsDeduplication(xRatings : RatingInstance[], yRatings :
 
 export function ComputeCorrelationCoefficient(xRatings : RatingInstance[], yRatings : RatingInstance[])
 {
-    const ratingsX = xRatings.map(x => x.value);
-    const ratingsY = yRatings.map(x => x.value);
+    return ComputeCorrelationCoefficientFromRatings(xRatings.map(x => x.value), yRatings.map(x => x.value));
+}
 
+export function ComputeCorrelationCoefficientFromRatings(ratingsX : number[], ratingsY : number[])
+{
     Assert(() => ratingsX.length == ratingsY.length);
 
     if(ratingsX.length == 0)
