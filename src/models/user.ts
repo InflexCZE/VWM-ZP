@@ -6,6 +6,7 @@ export = function (sequelize: any, DataTypes: any) {
     classMethods: {
       associate: function (models: any) {
         Model.hasMany(models.Rating, { as: 'ratings', foreignKey: 'userId' })
+        Model.hasMany(models.Rank, { as: 'ranks', foreignKey: 'userId' })
       }
     }
   })

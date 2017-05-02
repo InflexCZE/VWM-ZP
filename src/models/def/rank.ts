@@ -1,13 +1,11 @@
 import * as X from '.'
-import * as Rating from './rating'
-import * as Rank from './rank'
+import * as User from './user'
 
 export interface Attributes extends X.Attributes {
-  name?: string
-  password?: string
+  rank?: number
 
-  ratings?: Rating.Instance[]
-  ranks?: Rank.Instance[]
+  user?: User.Instance
+  otherUser?: User.Instance
 }
 
 export interface Instance extends X.Instance<Attributes>, Attributes {}
