@@ -37,15 +37,16 @@ router.get('/detail', async function (ctx, next) {
   const data = Pearson.MakeChartData(X, Y)
   const index = Pearson.ComputeCorrelationCoefficient(X, Y)
 
-  if(index > 0)
+  if (index > 0)
     candidates = candidates.filter(x => x.value > 3);
   else
     candidates = candidates.filter(x => x.value < 3);
 
-  
 
-  ctx.state = 
-  {
+
+  ctx.state = {
+    userName1: user1.name,
+    userName2: user2.name,
     index,
     data,
     candidates
