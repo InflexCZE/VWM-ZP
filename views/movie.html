@@ -1,0 +1,7 @@
+<h1><%= MovieName %></h1>
+
+<% for(const x of Ratings)
+{ %>
+  <h3><%- include('templates/user', {User: x.User}) %> => <%= x.Value %></h3>
+<% } %>
+

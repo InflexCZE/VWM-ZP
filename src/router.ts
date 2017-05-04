@@ -55,11 +55,16 @@ router.get('/detail', async function (ctx, next) {
   await ctx.render('detail')
 });
 
-router.get('/userdetail', async function (ctx, next) {
-  const userId : number = ctx.query.userId;
+router.get('/userdetail', async function (ctx, next)
+{
+  const q : any = ctx.query;
+  const userId : number = +q.userId;
+  const usersAmount : number = +q.sampleusers || 10;
+  const moviesAmount : number = +q.moviecount || 10;
+
   const user = await User.findById(userId);
 
-const res : {name:string}[] = await sequelize.query(
+const res : any = await sequelize.query(
   `SELECT r."movieId", m.name, rx."otherUserId", rx.rank, r.value, rx.rank * r.value AS product FROM "Ratings" r
 JOIN "Movies" m ON m.id = r."movieId"
 JOIN (
@@ -75,15 +80,30 @@ WHERE NOT EXISTS (
 )
 ORDER BY r.value * rx.rank DESC
 LIMIT :moviesAmount`,
-{ type: sequelize.QueryTypes.SELECT, replacements: { userId, usersAmount: 10, moviesAmount: 10 } });
+{ type: sequelize.QueryTypes.SELECT, replacements: { userId, usersAmount, moviesAmount } });
 
   ctx.state =
   {
+    User: user,
     Movies: res,
-    UserName: user.name,
+    MovieCount: moviesAmount,
+    UsersAmount: usersAmount,
   };
 
   await ctx.render('userdetail');
+})
+
+router.get('/movie', async function (ctx, next) {
+  const id = ctx.query.id;
+  const movie = await Movie.findById(id);
+  const ratings = await Rating.findAll({where: {movieId: id}, limit: 20, order: [['value', 'desc']], include: [{model: User, as: 'user'}]});
+
+  ctx.state =
+  {
+    MovieName: movie.name,
+    Ratings: ratings.map(x => ({User: x.user, Value: x.value}))
+  };
+  await ctx.render('movie')
 })
 
 router.get('/', async function (ctx, next) {
