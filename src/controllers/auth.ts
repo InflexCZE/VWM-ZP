@@ -54,4 +54,6 @@ router.get('/logout', isUser, async function (ctx) {
   ctx.redirect('/')
 })
 
-export default router
+export default function (mainRouter: KoaRouter) {
+  mainRouter.use('/auth', router.routes())
+}
