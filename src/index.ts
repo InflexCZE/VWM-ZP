@@ -33,6 +33,10 @@ app.use(async function (ctx, next) {
     ctx.user = await User.findById(ctx.session.userId)
   }
 
+  ctx.state = {
+    user: ctx.user
+  }
+
   await next()
 })
 

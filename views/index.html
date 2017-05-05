@@ -3,12 +3,49 @@
 <title>VWM - Colaborative filtering</title>
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
 
 <body>
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">VWM - Colaborative filtering</a>
+      </div>
+
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="nav navbar-nav">
+          <li><a href="/movies">Filmy</a></li>
+          <li><a href="/users">Uživatelé</a></li>
+        </ul>
+        <div class="navbar-right">
+          <% if (user) { %>
+          <p class="navbar-text"><strong><%= user.name %></strong></p>
+          <a href="/auth/logout" class="btn btn-default navbar-btn">Logout</a>
+          <% } else { %>
+          <a href="/auth/login" class="btn btn-default navbar-btn">Login</a>
+          <% } %>
+        </div>
+        <form class="navbar-form navbar-right" method="get" action="/movies/search">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Název filmu">
+            <span class="input-group-btn">
+              <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </nav>
   <div class="container">
     <%- body %>
   </div>
