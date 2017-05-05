@@ -4,6 +4,9 @@ import * as Pearson from './services/pearson'
 
 const router = new KoaRouter()
 
+import authRouter from './controllers/auth'
+router.use('/auth', authRouter.routes())
+
 router.get('/detail', async function (ctx, next) {
   const id1 = ctx.query.id1
   const id2 = ctx.query.id2

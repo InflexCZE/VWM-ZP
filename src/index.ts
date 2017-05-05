@@ -3,11 +3,14 @@ import * as Koa from 'koa'
 import * as KoaLogger from 'koa-logger'
 import * as KoaSession from 'koa-session-minimal'
 import * as KoaEjs from 'koa-ejs'
+import * as KoaBodyParser from 'koa-bodyparser'
 import * as path from 'path'
-import { sequelize } from './models'
+import { sequelize, User } from './models'
+import { Instance as UserInstance } from './models/def/user'
 
 const app = new Koa()
 
+app.use(KoaBodyParser())
 app.use(KoaLogger())
 app.use(KoaSession())
 
@@ -17,6 +20,20 @@ KoaEjs(app, {
   viewExt: 'html',
   cache: false,
   debug: config.isDevelopment
+})
+
+declare module 'koa' {
+  interface Context {
+    user?: UserInstance
+  }
+}
+
+app.use(async function (ctx, next) {
+  if (ctx.session.userId) {
+    ctx.user = await User.findById(ctx.session.userId)
+  }
+
+  await next()
 })
 
 import router from './router'
