@@ -19,14 +19,35 @@ export async function isGuest(ctx: KoaRouter.IRouterContext, next: () => Promise
 const router = new KoaRouter()
 
 router.get('/login', isGuest, async function (ctx) {
+  const { name, error } = <{ name: string; error: string }>ctx.query
+
+  Object.assign(ctx.state, {
+    name: name || '',
+    missingCredentials: false,
+    noSuchUser: false,
+    wrongPassword: false
+  })
+
+  if (error === 'missing-credentials') {
+    ctx.state.missingCredentials = true
+  }
+  else if (error === 'no-such-user') {
+    ctx.state.noSuchUser = true
+  }
+  else if (error === 'wrong-password') {
+    ctx.state.wrongPassword = true
+  }
+
   await ctx.render('auth/login')
 })
 
 router.post('/login', isGuest, async function (ctx) {
   const { name, password } = <{ name: string; password: string }>ctx.request.body
 
+  const error = (type: string) => `/auth/login?name=${name || ''}&error=${type}`
+
   if (!name || !password) {
-    return ctx.redirect('/auth/login?error=missing-credentials')
+    return ctx.redirect(error('missing-credentials'))
   }
 
   const user = await User.findOne({
@@ -37,7 +58,7 @@ router.post('/login', isGuest, async function (ctx) {
   })
 
   if (!user) {
-    return ctx.redirect('/auth/login?error=no-such-user')
+    return ctx.redirect(error('no-such-user'))
   }
 
   if (await Bcrypt.compare(password, user.password)) {
@@ -45,7 +66,7 @@ router.post('/login', isGuest, async function (ctx) {
     ctx.redirect('/')
   }
   else {
-    ctx.redirect('/auth/login?error=wrong-password')
+    ctx.redirect(error('wrong-password'))
   }
 })
 
