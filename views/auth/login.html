@@ -1,26 +1,36 @@
-<h1>Přihlášení</h1>
-
-<form method="post" action="/auth/login">
-  <div class="form-group <%= cond({ 'has-error': (missingCredentials || noSuchUser) }) %>">
-    <label>Jméno:</label>
-    <input type="text" name="name" value="<%= name %>" class="form-control">
-    <span class="help-block">
-    <%= cond({
-      'Musíte zadat jméno a heslo.': missingCredentials,
-      'Uživatel s tímto jménem neexistuje': noSuchUser
-    }) %>
-    </span>
+<div class="row">
+  <div class="col col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h1>Přihlášení</h1>
+      </div>
+      <div class="panel-body">
+        <form method="post" action="/auth/login">
+          <div class="form-group <%= cond({ 'has-error': (missingCredentials || noSuchUser) }) %>">
+            <label>Jméno:</label>
+            <input type="text" name="name" value="<%= name %>" class="form-control">
+            <span class="help-block">
+            <%= cond({
+              'Musíte zadat jméno a heslo.': missingCredentials,
+              'Uživatel s tímto jménem neexistuje': noSuchUser
+            }) %>
+            </span>
+          </div>
+          <div class="form-group <%= cond({ 'has-error': wrongPassword }) %>">
+            <label>Heslo:</label>
+            <input type="password" name="password" class="form-control">
+            <span class="help-block">
+            <%= cond({
+              'Špatné heslo': wrongPassword
+            }) %>
+            </span>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">Přihlásit</button>
+          </div>
+        </form>
+      </div>
+      <div class="panel-footer">Nemáte ještě účet? <a href="/auth/register">Zaregistrujte se</a>.</div>
+    </div>
   </div>
-  <div class="form-group <%= cond({ 'has-error': wrongPassword }) %>">
-    <label>Heslo:</label>
-    <input type="password" name="password" class="form-control">
-    <span class="help-block">
-    <%= cond({
-      'Špatné heslo': wrongPassword
-    }) %>
-    </span>
-  </div>
-  <div class="form-group">
-    <button type="submit" class="btn btn-primary">Přihlásit</button>
-  </div>
-</form>
+</div>
