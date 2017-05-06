@@ -1,0 +1,13 @@
+<h1>Přehled uživatelů</h1>
+
+<% for (const user of users) { %>
+  <a href="/users/detail/<%= user.id %>">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <h2><%= user.name %></h2>
+      </div>
+    </div>
+  </a>
+<% } %>
+
+<%- include(template('pagination')) %>

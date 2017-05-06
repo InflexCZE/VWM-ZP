@@ -1,13 +1,15 @@
-<nav class="text-center">
-  <ul class="pagination pagination-sm">
-    <% let last = 1 %>
-    <% for (let i = 1; i <= pages; ++i) { %>
-      <% if (Math.abs(i - page) > 10 && i !== 1 && i !== pages) continue %>
-      <% if (i - last > 1) { %>
-        <li class="disabled"><a href="javascript:void()">…</a></li>
+<% if (pages > 1) { %>
+  <nav class="text-center">
+    <ul class="pagination pagination-sm">
+      <% let last = 1 %>
+      <% for (let i = 1; i <= pages; ++i) { %>
+        <% if (Math.abs(i - page) > 10 && i !== 1 && i !== pages) continue %>
+        <% if (i - last > 1) { %>
+          <li class="disabled"><a href="javascript:void()">…</a></li>
+        <% } %>
+        <li class="<%= cond({ 'active': i === page }) %>"><a href="<%= path %>?<%= qs({ 'search': search, 'page': i }) %>"><%= i %></a></li>
+        <% last = i %>
       <% } %>
-      <li class="<%= cond({ 'active': i === page }) %>"><a href="/movies?<%= qs({ 'search': search, 'page': i }) %>"><%= i %></a></li>
-      <% last = i %>
-    <% } %>
-  </ul>
-</nav>
+    </ul>
+  </nav>
+<% } %>

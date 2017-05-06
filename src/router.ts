@@ -9,6 +9,9 @@ authController(router)
 import moviesController from './controllers/movies'
 moviesController(router)
 
+import usersController from './controllers/users'
+usersController(router)
+
 import dataController from './controllers/data'
 dataController(router)
 
