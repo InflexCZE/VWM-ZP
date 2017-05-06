@@ -15,6 +15,9 @@ usersController(router)
 import dataController from './controllers/data'
 dataController(router)
 
+import adminController from './controllers/admin'
+adminController(router)
+
 router.get('/', async function (ctx, next) {
   await ctx.render('homepage')
 })

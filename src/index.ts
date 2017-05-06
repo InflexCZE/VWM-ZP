@@ -41,6 +41,7 @@ app.use(async function (ctx, next) {
 
   ctx.state = {
     user: ctx.user,
+    admin: false,
     cond(keys: { [key: string]: boolean }) {
       let res = ''
       for (const key in keys) {
