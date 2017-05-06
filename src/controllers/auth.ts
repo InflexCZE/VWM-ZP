@@ -4,7 +4,7 @@ import * as Bcrypt from 'bcryptjs'
 
 export async function isUser(ctx: KoaRouter.IRouterContext, next: () => Promise<any>) {
   if (!ctx.user) {
-    return ctx.redirect('/login')
+    return ctx.redirect('/auth/login')
   }
   await next()
 }
@@ -110,6 +110,40 @@ router.post('/register', isGuest, async function (ctx) {
   catch (err) {
     ctx.redirect(error('name-already-used'))
   }
+})
+
+router.get('/change-password', isUser, async function (ctx) {
+  const { error } = <{ error: string }>ctx.query
+
+  Object.assign(ctx.state, {
+    wrongOldPassword: error === 'wrong-old-password',
+    missingPassword: error === 'missing-password',
+    passwordsDoNotMatch: error === 'passwords-do-not-match'
+  })
+
+  await ctx.render('auth/change-password')
+})
+
+router.post('/change-password', isUser, async function (ctx) {
+  const { oldPassword, password, passwordAgain } = <{ oldPassword: string; password: string; passwordAgain: string }>ctx.request.body
+
+  const error = (type: string) => `/auth/change-password?error=${type}`
+
+  if (!oldPassword || !(await Bcrypt.compare(oldPassword, ctx.user.password))) {
+    return ctx.redirect(error('wrong-old-password'))
+  }
+  if (!password) {
+    return ctx.redirect(error('missing-password'))
+  }
+  if (password !== passwordAgain) {
+    return ctx.redirect(error('passwords-do-not-match'))
+  }
+
+  await ctx.user.update({
+    password: await Bcrypt.hash(password, 9)
+  })
+
+  ctx.redirect('/auth/change-password')
 })
 
 export default function (mainRouter: KoaRouter) {
