@@ -6,12 +6,13 @@
       </div>
       <div class="panel-body">
         <form method="post" action="/auth/register">
-          <div class="form-group <%= cond({ 'has-error': (missingName || nameAlreadyUsed) }) %>">
+          <div class="form-group <%= cond({ 'has-error': (missingName || wrongName || nameAlreadyUsed) }) %>">
             <label>Jméno:</label>
             <input type="text" name="name" value="<%= name %>" class="form-control">
             <span class="help-block">
             <%= cond({
               'Musíte zadat jméno.': missingName,
+              'Jméno smí obsahovat pouze malá a velká písmena, číslice, tečku a podtržítko.': wrongName,
               'Uživatel s tímto jménem již existuje.': nameAlreadyUsed
             }) %>
             </span>
