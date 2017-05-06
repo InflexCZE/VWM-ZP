@@ -10,10 +10,10 @@ router.get('/', async function (ctx) {
   const page = +ctx.query.page || 1
   const search = ctx.query.search || ''
 
-  const count = await Movie.count()
-
   const where: { name?: any } = {}
   if (search) where.name = { $iLike: `%${search}%` }
+
+  const count = await Movie.count({ where })
 
   const movies = await Movie.findAll({
     where,
@@ -30,6 +30,20 @@ router.get('/', async function (ctx) {
   })
 
   await ctx.render('movies/list')
+})
+
+router.get('/detail/:id', async function (ctx) {
+  const id = +ctx.params.id
+  if (!id) return ctx.redirect('/movies')
+
+  const movie = await Movie.findById(id)
+  if (!movie) return ctx.redirect('/movies')
+
+  Object.assign(ctx.state, {
+    movie
+  })
+
+  await ctx.render('movies/detail')
 })
 
 export default function (mainRouter: KoaRouter) {

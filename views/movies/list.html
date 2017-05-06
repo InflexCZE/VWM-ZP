@@ -16,16 +16,4 @@
   </a>
 <% } %>
 
-<nav class="text-center">
-  <ul class="pagination pagination-sm">
-    <% let last = 1 %>
-    <% for (let i = 1; i <= pages; ++i) { %>
-      <% if (Math.abs(i - page) > 10 && i !== 1 && i !== pages) continue %>
-      <% if (i - last > 1) { %>
-        <li class="disabled"><a href="javascript:void()">…</a></li>
-      <% } %>
-      <li class="<%= cond({ 'active': i === page }) %>"><a href="/movies?search=<%= encodeURIComponent(search) %>&amp;page=<%= i %>"><%= i %></a></li>
-      <% last = i %>
-    <% } %>
-  </ul>
-</nav>
+<%- include(template('pagination')) %>
