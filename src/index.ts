@@ -56,6 +56,11 @@ app.use(async function (ctx, next) {
     },
     template(name: string) {
       return path.join(__dirname, '../views/templates', `${name}.html`)
+    },
+    formatDate(date: Date) {
+      const two = (x: number) => x < 10 ? `0${x}` : `${x}`
+
+      return `${date.getDate()}. ${date.getMonth() + 1}. ${date.getFullYear()} v ${date.getHours()}:${two(date.getMinutes())}:${two(date.getSeconds())}`
     }
   }
 

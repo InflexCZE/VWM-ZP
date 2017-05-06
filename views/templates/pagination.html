@@ -6,7 +6,7 @@
       <% if (i - last > 1) { %>
         <li class="disabled"><a href="javascript:void()">…</a></li>
       <% } %>
-      <li class="<%= cond({ 'active': i === page }) %>"><a href="/movies?<%= qs({ 'search': search, 'page': i }) %>"><%= i %></a></li>
+      <li class="<%= cond({ 'active': i === page }) %>"><a href="<%= path %>?<%= qs({ 'search': search, 'page': i }) %>"><%= i %></a></li>
       <% last = i %>
     <% } %>
   </ul>
