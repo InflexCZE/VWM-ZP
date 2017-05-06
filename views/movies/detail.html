@@ -6,7 +6,7 @@
       <div class="panel-heading">
         <h2>Průměrné hodnocení:</h2>
       </div>
-      <div class="panel-body" style="font-size: 3em;">
+      <div class="panel-body fa-3x">
         <div><%= (average * 100 / 5).toFixed(0) %> %</div>
         <%- include(template('rating'), { rating: average }) %>
       </div>
@@ -20,7 +20,7 @@
         </div>
         <div class="panel-body">
           <% if (userRating) { %>
-            <div style="font-size: 2em;"><%- include(template('rating'), { rating: userRating.value }) %></div>
+            <div class="fa-2x"><%- include(template('rating'), { rating: userRating.value }) %></div>
           <% } else { %>
             <p>K tomuto filmu zatím nemáte hodnocení.</p>
           <% } %>
