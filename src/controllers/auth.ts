@@ -34,7 +34,7 @@ router.get('/login', isGuest, async function (ctx) {
 router.post('/login', isGuest, async function (ctx) {
   const { name, password } = <{ name: string; password: string }>ctx.request.body
 
-  const error = (type: string) => `/auth/login?name=${name || ''}&error=${type}`
+  const error = (type: string) => `/auth/login?name=${encodeURIComponent(name || '')}&error=${type}`
 
   if (!name || !password) {
     return ctx.redirect(error('missing-credentials'))
@@ -83,7 +83,7 @@ router.get('/register', isGuest, async function (ctx) {
 router.post('/register', isGuest, async function (ctx) {
   const { name, password, passwordAgain } = <{ name: string; password: string; passwordAgain: string }>ctx.request.body
 
-  const error = (type: string) => `/auth/register?name=${name || ''}&error=${type}`
+  const error = (type: string) => `/auth/register?name=${encodeURIComponent(name || '')}&error=${type}`
 
   if (!name) {
     return ctx.redirect(error('missing-name'))
