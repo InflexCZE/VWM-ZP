@@ -1,0 +1,31 @@
+<h1>Přehled filmů</h1>
+<% if (search) { %>
+<p>Vyhledávání „<%= search %>“:</p>
+<% } %>
+
+<% if (movies.length === 0) { %>
+<p>Nebyly nalezeny žádné filmy.</p>
+<% } %>
+<% for (const movie of movies) { %>
+  <a href="/movies/detail/<%= movie.id %>">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <h2><%= movie.name %></h2>
+      </div>
+    </div>
+  </a>
+<% } %>
+
+<nav>
+  <ul class="pagination pagination-sm">
+    <% let last = 1 %>
+    <% for (let i = 1; i <= pages; ++i) { %>
+      <% if (Math.abs(i - page) > 10 && i !== 1 && i !== pages) continue %>
+      <% if (i - last > 1) { %>
+        <li class="disabled"><a href="javascript:void()">…</a></li>
+      <% } %>
+      <li class="<%= cond({ 'active': i === page }) %>"><a href="/movies?search=<%= encodeURIComponent(search) %>&amp;page=<%= i %>"><%= i %></a></li>
+      <% last = i %>
+    <% } %>
+  </ul>
+</nav>
