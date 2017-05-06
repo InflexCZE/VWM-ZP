@@ -7,7 +7,7 @@ function updateTextInput(text, val)
 }
 </script>
 
-<form method="GET" action="userdetail">
+<form method="GET" action="/data/userdetail">
   <input class="form-control" type="range" name="sampleusers" min="1" max="20" onchange="updateTextInput('sampleusersT', `Sample users: ${this.value}`);">
   <input class="form-control" type="text" id="sampleusersT" value="">
 
@@ -15,7 +15,7 @@ function updateTextInput(text, val)
   <input class="form-control" type="text" id="moviecountT" value="">
 
   <br>
-  <input class="form-control" type="hidden" name="userId" value="<%= iser.id %>">
+  <input class="form-control" type="hidden" name="userId" value="<%= User.id %>">
   <input class="form-control" type="submit" value="Ok">
 </form>
 
