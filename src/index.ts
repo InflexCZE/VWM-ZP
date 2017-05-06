@@ -2,6 +2,7 @@ import config from './config'
 import * as Koa from 'koa'
 import * as KoaLogger from 'koa-logger'
 import * as KoaSession from 'koa-session-minimal'
+import FileStore from './file-store'
 import * as KoaEjs from 'koa-ejs'
 import * as KoaBodyParser from 'koa-bodyparser'
 import * as path from 'path'
@@ -12,7 +13,9 @@ const app = new Koa()
 
 app.use(KoaBodyParser())
 app.use(KoaLogger())
-app.use(KoaSession())
+app.use(KoaSession({
+  store: config.isDevelopment ? new FileStore() : null
+}))
 
 KoaEjs(app, {
   root: path.join(__dirname, '../views'),

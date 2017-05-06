@@ -3,4 +3,5 @@
 /node.exe
 /.env
 /.vscode
+/.session.json
 *.cmd
