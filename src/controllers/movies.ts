@@ -39,8 +39,31 @@ router.get('/detail/:id', async function (ctx) {
   const movie = await Movie.findById(id)
   if (!movie) return ctx.redirect('/movies')
 
+  const ratings = await Rating.findAll({
+    include: [
+      {
+        model: User, as: 'user',
+        attributes: ['id', 'name']
+      }
+    ],
+    where: {
+      movieId: movie.id
+    },
+    order: [['id', 'DESC']],
+    limit: 20
+  })
+
+  const average = +(await Rating.findOne({
+    attributes: [[sequelize.fn('AVG', sequelize.col('value')), 'avg']],
+    where: {
+      movieId: movie.id
+    }
+  })).get('avg')
+
   Object.assign(ctx.state, {
-    movie
+    movie,
+    average,
+    ratings
   })
 
   await ctx.render('movies/detail')

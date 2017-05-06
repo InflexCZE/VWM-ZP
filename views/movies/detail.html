@@ -1,1 +1,29 @@
-<h1><%= movie.name %></h1>
+<h1>Detail filmu <strong><%= movie.name %></strong></h1>
+
+<div class="row">
+  <div class="col col-sm-6 col-xs-12">
+    <div class="panel <%= cond({ 'panel-success': average >= 4, 'panel-warning': average >= 2 && average < 4, 'panel-danger': average < 2 }) %>">
+      <div class="panel-heading">
+        <h2>Průměrné hodnocení:</h2>
+      </div>
+      <div class="panel-body" style="font-size: 3em;">
+        <div><%= (average * 100 / 5).toFixed(0) %> %</div>
+        <%- include(template('rating'), { rating: average }) %>
+      </div>
+    </div>
+  </div>
+  <div class="col col-sm-6 col-xs-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h2>Přehled posledních hodnocení:</h2>
+      </div>
+      <div class="panel-body">
+        <ul>
+          <% for (const rating of ratings) { %>
+            <li><strong><a href="/users/detail/<%= rating.user.id %>"><%= rating.user.name %></a></strong>: <%- include(template('rating'), { rating: rating.value }) %></li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
