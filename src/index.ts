@@ -8,6 +8,7 @@ import * as KoaBodyParser from 'koa-bodyparser'
 import * as path from 'path'
 import { sequelize, User } from './models'
 import { Instance as UserInstance } from './models/def/user'
+import * as querystring from 'querystring'
 
 const app = new Koa()
 
@@ -47,6 +48,12 @@ app.use(async function (ctx, next) {
       }
 
       return res
+    },
+    qs(data: { [key: string]: any }) {
+      return querystring.stringify(data)
+    },
+    template(name: string) {
+      return path.join(__dirname, '../views/templates', `${name}.html`)
     }
   }
 
