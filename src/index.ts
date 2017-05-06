@@ -5,6 +5,7 @@ import * as KoaSession from 'koa-session-minimal'
 import FileStore from './file-store'
 import * as KoaEjs from 'koa-ejs'
 import * as KoaBodyParser from 'koa-bodyparser'
+import * as KoaStatic from 'koa-static'
 import * as path from 'path'
 import { sequelize, User } from './models'
 import { Instance as UserInstance } from './models/def/user'
@@ -17,6 +18,7 @@ app.use(KoaLogger())
 app.use(KoaSession({
   store: config.isDevelopment ? new FileStore() : null
 }))
+app.use(KoaStatic(path.join(__dirname, '../assets')))
 
 KoaEjs(app, {
   root: path.join(__dirname, '../views'),

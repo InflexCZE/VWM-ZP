@@ -21,5 +21,7 @@ function updateTextInput(text, val)
 
 <% for(const x of Movies)
 { %>
-  <h2><%= x.name %></h2>
+  <h2>
+    <%- include('templates/movie', {Movie: x}) %>
+  </h2>
 <% } %>

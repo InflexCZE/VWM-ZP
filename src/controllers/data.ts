@@ -64,8 +64,8 @@ router.get('/userdetail', async function (ctx, next)
 
   const user = await User.findById(userId);
 
-const res : any = await sequelize.query(
-  `SELECT r."movieId", m.name, rx."otherUserId", rx.rank, r.value, rx.rank * r.value AS product FROM "Ratings" r
+const res : any[] = await sequelize.query(
+  `SELECT r."movieId" as id, m.name, rx."otherUserId", rx.rank, r.value, rx.rank * r.value AS product FROM "Ratings" r
 JOIN "Movies" m ON m.id = r."movieId"
 JOIN (
   SELECT rx."otherUserId", rx.rank FROM "Ranks" rx
@@ -87,6 +87,7 @@ LIMIT :moviesAmount`,
     Movies: res,
     MovieCount: moviesAmount,
     UsersAmount: usersAmount,
+
   });
 
   await ctx.render('userdetail');
@@ -97,9 +98,15 @@ router.get('/movie', async function (ctx, next) {
   const movie = await Movie.findById(id);
   const ratings = await Rating.findAll({where: {movieId: id}, limit: 20, order: [['value', 'desc']], include: [{model: User, as: 'user'}]});
 
+  const Count = function(value:number)
+  {
+    return ratings.reduce((acc, val) => val.value == value ? acc + 1 : acc, 0);
+  };
+
   Object.assign(ctx.state, {
     MovieName: movie.name,
-    Ratings: ratings.map(x => ({User: x.user, Value: x.value}))
+    Ratings: ratings.map(x => ({User: x.user, Value: x.value})),
+    ChartData: [Count(1), Count(2), Count(3), Count(4), Count(5)]
   });
 
   await ctx.render('movie')
@@ -108,3 +115,23 @@ router.get('/movie', async function (ctx, next) {
 export default function (mainRouter: KoaRouter) {
   mainRouter.use('/data', router.routes())
 }
+
+router.get('/users', async function (ctx, next)
+{
+  Object.assign(ctx.state,
+  {
+    Users: await User.findAll()
+  });
+
+  await ctx.render('users')
+});
+
+router.get('/movies', async function (ctx, next)
+{
+  Object.assign(ctx.state,
+  {
+    Movies: await Movie.findAll()
+  });
+
+  await ctx.render('movies')
+});
