@@ -23,20 +23,10 @@ router.get('/login', isGuest, async function (ctx) {
 
   Object.assign(ctx.state, {
     name: name || '',
-    missingCredentials: false,
-    noSuchUser: false,
-    wrongPassword: false
+    missingCredentials: error === 'missing-credentials',
+    noSuchUser: error === 'no-such-user',
+    wrongPassword: error === 'wrong-password'
   })
-
-  if (error === 'missing-credentials') {
-    ctx.state.missingCredentials = true
-  }
-  else if (error === 'no-such-user') {
-    ctx.state.noSuchUser = true
-  }
-  else if (error === 'wrong-password') {
-    ctx.state.wrongPassword = true
-  }
 
   await ctx.render('auth/login')
 })
@@ -73,6 +63,53 @@ router.post('/login', isGuest, async function (ctx) {
 router.get('/logout', isUser, async function (ctx) {
   delete ctx.session.userId
   ctx.redirect('/')
+})
+
+router.get('/register', isGuest, async function (ctx) {
+  const { name, error } = <{ name: string; error: string }>ctx.query
+
+  Object.assign(ctx.state, {
+    name: name || '',
+    missingName: error === 'missing-name',
+    wrongName: error === 'wrong-name',
+    nameAlreadyUsed: error === 'name-already-used',
+    missingPassword: error === 'missing-password',
+    passwordsDoNotMatch: error === 'passwords-do-not-match'
+  })
+
+  await ctx.render('auth/register')
+})
+
+router.post('/register', isGuest, async function (ctx) {
+  const { name, password, passwordAgain } = <{ name: string; password: string; passwordAgain: string }>ctx.request.body
+
+  const error = (type: string) => `/auth/register?name=${name || ''}&error=${type}`
+
+  if (!name) {
+    return ctx.redirect(error('missing-name'))
+  }
+  if (!/^[a-zA-Z0-9\._]+$/.test(name)) {
+    return ctx.redirect(error('wrong-name'))
+  }
+  if (!password) {
+    return ctx.redirect(error('missing-password'))
+  }
+  if (password !== passwordAgain) {
+    return ctx.redirect(error('passwords-do-not-match'))
+  }
+
+  try {
+    const user = await User.create({
+      name,
+      password: await Bcrypt.hash(password, 9)
+    })
+
+    ctx.session.userId = user.id
+    ctx.redirect('/')
+  }
+  catch (err) {
+    ctx.redirect(error('name-already-used'))
+  }
 })
 
 export default function (mainRouter: KoaRouter) {

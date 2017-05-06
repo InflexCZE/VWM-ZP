@@ -12,7 +12,7 @@
             <span class="help-block">
             <%= cond({
               'Musíte zadat jméno a heslo.': missingCredentials,
-              'Uživatel s tímto jménem neexistuje': noSuchUser
+              'Uživatel s tímto jménem neexistuje.': noSuchUser
             }) %>
             </span>
           </div>
@@ -21,7 +21,7 @@
             <input type="password" name="password" class="form-control">
             <span class="help-block">
             <%= cond({
-              'Špatné heslo': wrongPassword
+              'Špatné heslo.': wrongPassword
             }) %>
             </span>
           </div>
