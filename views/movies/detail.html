@@ -18,11 +18,12 @@
         <h2>Přehled posledních hodnocení:</h2>
       </div>
       <div class="panel-body">
-        <ul>
+        <dl class="dl-horizontal">
           <% for (const rating of ratings) { %>
-            <li><strong><a href="/users/detail/<%= rating.user.id %>"><%= rating.user.name %></a></strong>: <%- include(template('rating'), { rating: rating.value }) %></li>
+            <dt><a href="/users/detail/<%= rating.user.id %>"><%= rating.user.name %></a></dt>
+            <dd><%- include(template('rating'), { rating: rating.value }) %></dd>
           <% } %>
-        </ul>
+        </dl>
       </div>
     </div>
   </div>

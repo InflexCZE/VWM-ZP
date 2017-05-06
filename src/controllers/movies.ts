@@ -49,7 +49,7 @@ router.get('/detail/:id', async function (ctx) {
     where: {
       movieId: movie.id
     },
-    order: [['id', 'DESC']],
+    order: [['updatedAt', 'DESC']],
     limit: 20
   })
 
