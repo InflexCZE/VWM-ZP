@@ -24,7 +24,7 @@ router.get('/', async function (ctx) {
 
   Object.assign(ctx.state, {
     movies,
-    path: '/users',
+    path: '/movies',
     pages: Math.ceil(count / onPage),
     page,
     search
