@@ -1,0 +1,19 @@
+<h1>Přehled filmů</h1>
+<% if (search) { %>
+<p>Vyhledávání „<%= search %>“:</p>
+<% } %>
+
+<% if (movies.length === 0) { %>
+<p>Nebyly nalezeny žádné filmy.</p>
+<% } %>
+<% for (const movie of movies) { %>
+  <a href="/movies/detail/<%= movie.id %>">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <h2><%= movie.name %></h2>
+      </div>
+    </div>
+  </a>
+<% } %>
+
+<%- include(template('pagination')) %>

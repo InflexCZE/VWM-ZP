@@ -1,0 +1,57 @@
+<h1>Detail filmu <strong><%= movie.name %></strong></h1>
+
+<div class="row">
+  <div class="col col-sm-6 col-xs-12">
+    <div class="panel <%= cond({ 'panel-success': average >= 4, 'panel-warning': average >= 2 && average < 4, 'panel-danger': average < 2 }) %>">
+      <div class="panel-heading">
+        <h2>Průměrné hodnocení:</h2>
+      </div>
+      <div class="panel-body" style="font-size: 3em;">
+        <div><%= (average * 100 / 5).toFixed(0) %> %</div>
+        <%- include(template('rating'), { rating: average }) %>
+      </div>
+    </div>
+  </div>
+  <div class="col col-sm-6 col-xs-12">
+    <% if (user) { %>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h2>Moje hodnocení:</h2>
+        </div>
+        <div class="panel-body">
+          <% if (userRating) { %>
+            <div style="font-size: 2em;"><%- include(template('rating'), { rating: userRating.value }) %></div>
+          <% } else { %>
+            <p>K tomuto filmu zatím nemáte hodnocení.</p>
+          <% } %>
+        </div>
+        <div class="panel-footer">
+          <form method="post" action="/movies/rate/<%= movie.id %>">
+            <% for (let i = 0; i <= 5; ++i) { %>
+              <div class="form-group">
+                <label>
+                  <input type="radio" name="value" value="<%= i %>" <%= cond({ 'checked': userRating && userRating.value === i }) %>>
+                  <%- include(template('rating'), { rating: i }) %>
+                </label>
+              </div>
+            <% } %>
+            <button type="submit" class="btn btn-primary">Hodnotit</button>
+          </form>
+        </div>
+      </div>
+    <% } %>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h2>Přehled posledních hodnocení:</h2>
+      </div>
+      <div class="panel-body">
+        <dl class="dl-horizontal">
+          <% for (const rating of ratings) { %>
+            <dt><a href="/users/detail/<%= rating.user.id %>"><%= rating.user.name %></a></dt>
+            <dd><%- include(template('rating'), { rating: rating.value }) %></dd>
+          <% } %>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+<span class="text-info">
+  <% for (let i = 1; i <= 5; ++i) { %>
+    <% if (i <= rating) { %>
+      <i class="fa fa-star"></i>
+    <% } else if (i === Math.round(rating)) { %>
+      <i class="fa fa-star-half-o"></i>
+    <% } else { %>
+      <i class="fa fa-star-o"></i>
+    <% } %>
+  <% } %>
+</span>

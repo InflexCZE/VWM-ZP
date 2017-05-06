@@ -6,6 +6,9 @@ const router = new KoaRouter()
 import authController from './controllers/auth'
 authController(router)
 
+import moviesController from './controllers/movies'
+moviesController(router)
+
 import dataController from './controllers/data'
 dataController(router)
 
