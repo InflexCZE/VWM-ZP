@@ -86,8 +86,8 @@ export function ComputeCorrelationCoefficientFromRatings(ratingsX : number[], ra
     let index = sum / (ratingsX.length - 1);
     index = Math.min(Math.max(index, -1), 1);
 
-    //Normalize <-1, 1> to <0, 1>
-    return (index + 1) / 2;
+    //Normalize <-1, 1> to <0, 1> & prevent NaN
+    return ((index + 1) / 2) || 0;
 }
 
 export function MakeChartData(xRatings : RatingInstance[], yRatings : RatingInstance[]) : DataSet[]
