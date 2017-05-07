@@ -7,6 +7,7 @@ import * as User from './def/user'
 import * as Movie from './def/movie'
 import * as Rating from './def/rating'
 import * as Rank from './def/rank'
+import * as Parameter from './def/parameter'
 
 const db: {
   [key: string]: any
@@ -17,6 +18,7 @@ const db: {
   Movie?: Movie.Model
   Rating?: Rating.Model
   Rank?: Rank.Model
+  Parameter?: Parameter.Model
 } = {}
 
 const basename: string = path.basename(module.filename)

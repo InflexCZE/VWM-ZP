@@ -1,4 +1,4 @@
-# VWM - Colaborative filtering
+# VWM - Collaborative filtering
 
 ## Configuration
 Create /.env file:

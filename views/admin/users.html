@@ -1,0 +1,12 @@
+<h1>Uživatelé</h1>
+
+<h2>Smazání</h2>
+
+<form method="post" action="/admin/users/delete" onsubmit="return confirm('Opravdu chcete smazat tohoto uživatele?')">
+  <div class="form-group">
+    <label for="id">ID uživatele:</label>
+    <input type="text" name="id" class="form-control">
+  </div>
+
+  <button type="submit" class="btn btn-primary">Smazat</button>
+</form>
