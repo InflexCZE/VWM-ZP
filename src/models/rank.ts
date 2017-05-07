@@ -9,7 +9,14 @@ export = function (sequelize: any, DataTypes: any) {
         Model.belongsTo(models.User, { as: 'user', foreignKey: 'userId' })
         Model.belongsTo(models.User, { as: 'otherUser', foreignKey: 'otherUserId' })
       }
-    }
+    },
+
+    indexes: [
+      {
+        unique: true,
+        fields: ['userId', 'otherUserId']
+      }
+    ]
   })
 
   return Model

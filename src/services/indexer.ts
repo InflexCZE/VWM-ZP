@@ -4,7 +4,7 @@ import { Instance as RatingInstance } from '../models/def/rating'
 import { Instance as RangInstance } from '../models/def/rank'
 import * as Pearson from "./pearson"
 
-export function TriggerIndexUpdate(MIN_COMMON_RATINGS = 0, BATCH_SIZE = 100)
+export function TriggerIndexUpdate(MIN_COMMON_RATINGS = 0, BATCH_SIZE = 50)
 {
   return ExecuteForEachUser(BATCH_SIZE, user => UpdateIndexFor(user, MIN_COMMON_RATINGS, BATCH_SIZE));
 }
@@ -31,10 +31,7 @@ async function GetCommonRatings(userId : number, otherUserId: number)
 
 async function UpdateDbIndex(userId : number, otherUserId : number, rank : number)
 {
-  const [instance, created] = await Rank.findOrCreate({where: {userId, otherUserId}, defaults:{ rank }});
-
-  if(created === false)
-    instance.update({rank});
+  await Rank.upsert({ userId, otherUserId, rank });
 }
 
 function UpdateIndexFor(targetUser:number, MIN_COMMON_RATINGS:number, BATCH_SIZE:number)
@@ -50,16 +47,17 @@ function UpdateIndexFor(targetUser:number, MIN_COMMON_RATINGS:number, BATCH_SIZE
         rank = Pearson.ComputeCorrelationCoefficientFromRatings(userRatings, otherRatings);
       }
 
-      UpdateDbIndex(targetUser, otherUser, rank);
-      UpdateDbIndex(otherUser, targetUser, rank);
+      await Promise.all
+      ([
+        UpdateDbIndex(targetUser, otherUser, rank),
+        UpdateDbIndex(otherUser, targetUser, rank)
+      ]);
   }, {id: {gt: targetUser}});
 }
 
 //No async generator :(
 async function ExecuteForEachUser(BATCH_SIZE:number, action:(userBatch:number) => Promise<void>, filter?:any) //filter?:WhereOptions)
 {
-  const firedActions : Promise<void[]>[] = [];
-
   let batchOffset = 0;
   while(true)
   {
@@ -80,8 +78,6 @@ async function ExecuteForEachUser(BATCH_SIZE:number, action:(userBatch:number) =
     if(currentBatch.length == 0)
       break;
 
-    firedActions.push(Promise.all(currentBatch.map(x => action(x.id))));
+    await Promise.all(currentBatch.map(x => action(x.id)));
   }
-
-  await Promise.all(firedActions);
 }

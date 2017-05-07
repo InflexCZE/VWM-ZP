@@ -2,6 +2,8 @@ import * as X from '.'
 import * as User from './user'
 
 export interface Attributes extends X.Attributes {
+  userId?: number
+  otherUserId?: number
   rank?: number
 
   user?: User.Instance
