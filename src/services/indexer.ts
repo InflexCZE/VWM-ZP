@@ -50,8 +50,8 @@ function UpdateIndexFor(targetUser:number, MIN_COMMON_RATINGS:number, BATCH_SIZE
         rank = Pearson.ComputeCorrelationCoefficientFromRatings(userRatings, otherRatings);
       }
 
-      UpdateDbIndex(targetUser, otherUser, rank);
-      UpdateDbIndex(otherUser, targetUser, rank);
+      await UpdateDbIndex(targetUser, otherUser, rank);
+      await UpdateDbIndex(otherUser, targetUser, rank);
   }, {id: {gt: targetUser}});
 }
 
