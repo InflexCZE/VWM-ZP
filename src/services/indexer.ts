@@ -49,9 +49,12 @@ function UpdateIndexFor(targetUser:number, MIN_COMMON_RATINGS:number, BATCH_SIZE
       {
         rank = Pearson.ComputeCorrelationCoefficientFromRatings(userRatings, otherRatings);
       }
-
-      await UpdateDbIndex(targetUser, otherUser, rank);
-      await UpdateDbIndex(otherUser, targetUser, rank);
+    
+      await Promise.all
+      ([
+        UpdateDbIndex(targetUser, otherUser, rank),
+        UpdateDbIndex(otherUser, targetUser, rank)
+      ]);
   }, {id: {gt: targetUser}});
 }
 
