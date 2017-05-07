@@ -15,6 +15,11 @@
           <dd><%= count %></dd>
         </dl>
       </div>
+      <% if (user && user.id !== selectedUser.id) { %>
+        <div class="panel-footer">
+          <a href="/data/compare/<%= selectedUser.id %>">Srovnání</a>
+        </div>
+      <% } %>
     </div>
   </div>
   <div class="col col-sm-6 col-xs-12">

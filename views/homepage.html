@@ -4,7 +4,7 @@
   <h2>Doporučené filmy</h2>
 
   <% if (recommendations.length === 0) { %>
-  <p>Bohužel zatím nemáte žádná doporučení. Buď nemáte dostatečný počet ohodnocených filmů, nebo vaše hodnocení ještě nebylo zaindexováno.</p>
+    <p>Bohužel zatím nemáte žádná doporučení. Buď nemáte dostatečný počet ohodnocených filmů, nebo vaše hodnocení ještě nebylo zaindexováno.</p>
   <% } %>
 
   <div class="row">
@@ -22,6 +22,9 @@
               <li>Hodnocení: <%- include(template('rating'), r) %></li>
               <li>Důležitost: <%= r.weight.toFixed(2) %></li>
             </dl>
+          </div>
+          <div class="panel-footer">
+            <a href="/data/compare/<%= r.otherUserId %>">Srovnání</a>
           </div>
         </div>
       </div>
