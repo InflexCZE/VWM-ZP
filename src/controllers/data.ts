@@ -92,45 +92,6 @@ router.get('/compare/:id', isUser, async function (ctx, next) {
   await ctx.render('data/compare')
 })
 
-router.get('/movie', async function (ctx, next) {
-  const id = ctx.query.id;
-  const movie = await Movie.findById(id);
-  const ratings = await Rating.findAll({where: {movieId: id}, limit: 20, order: [['value', 'desc']], include: [{model: User, as: 'user'}]});
-
-  const Count = function(value:number)
-  {
-    return ratings.reduce((acc, val) => val.value == value ? acc + 1 : acc, 0);
-  };
-
-  Object.assign(ctx.state, {
-    MovieName: movie.name,
-    Ratings: ratings.map(x => ({User: x.user, Value: x.value})),
-    ChartData: [Count(1), Count(2), Count(3), Count(4), Count(5)]
-  });
-
-  await ctx.render('movie')
-})
-
 export default function (mainRouter: KoaRouter) {
   mainRouter.use('/data', router.routes())
 }
-
-router.get('/users', async function (ctx, next)
-{
-  Object.assign(ctx.state,
-  {
-    Users: await User.findAll()
-  });
-
-  await ctx.render('users')
-});
-
-router.get('/movies', async function (ctx, next)
-{
-  Object.assign(ctx.state,
-  {
-    Movies: await Movie.findAll()
-  });
-
-  await ctx.render('movies')
-});
