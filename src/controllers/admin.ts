@@ -1,6 +1,7 @@
 import * as KoaRouter from 'koa-router'
 import * as KoaAuth from 'koa-basic-auth'
 import { sequelize, User, Movie, Rating, Rank } from '../models'
+import * as Parameter from '../services/parameter'
 import config from '../config'
 
 const router = new KoaRouter()
@@ -112,6 +113,29 @@ router.post('/users/delete', async function (ctx) {
   }
 
   ctx.redirect('/admin/users')
+})
+
+router.get('/parameters', async function (ctx) {
+  Object.assign(ctx.state, {
+    minCommonRatings: await Parameter.get('minCommonRatings', 1),
+    usersCount: await Parameter.get('usersCount', 10),
+    moviesCount: await Parameter.get('moviesCount', 10)
+  })
+
+  await ctx.render('admin/parameters')
+})
+
+router.post('/parameters', async function (ctx) {
+  const names = ['minCommonRatings', 'usersCount', 'moviesCount']
+
+  for (const name of names) {
+    const value = +ctx.request.body[name]
+    if (value) {
+      await Parameter.set(name, value)
+    }
+  }
+
+  ctx.redirect('/admin/parameters')
 })
 
 export default function (mainRouter: KoaRouter) {

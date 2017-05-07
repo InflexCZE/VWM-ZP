@@ -1,6 +1,6 @@
 import { Parameter } from '../models'
 
-export async function get(name: string, defaultValue: number = 0) {
+async function getInstance(name: string, defaultValue: number = 0) {
   const [instance] = await Parameter.findOrCreate({
     where: {
       name
@@ -13,7 +13,12 @@ export async function get(name: string, defaultValue: number = 0) {
   return instance
 }
 
+export async function get(name: string, defaultValue: number = 0) {
+  const instance  = await getInstance(name, defaultValue)
+  return instance.value
+}
+
 export async function set(name: string, value: number) {
-  const instance = await get(name)
+  const instance = await getInstance(name)
   await instance.update({ value })
 }
