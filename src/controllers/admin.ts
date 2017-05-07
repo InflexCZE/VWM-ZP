@@ -2,6 +2,7 @@ import * as KoaRouter from 'koa-router'
 import * as KoaAuth from 'koa-basic-auth'
 import { sequelize, User, Movie, Rating, Rank } from '../models'
 import * as Parameter from '../services/parameter'
+import * as Indexer from '../services/indexer'
 import config from '../config'
 
 const router = new KoaRouter()
@@ -137,6 +138,15 @@ router.post('/parameters', async function (ctx) {
   }
 
   ctx.redirect('/admin/parameters')
+})
+
+router.get('/indexer', async function (ctx) {
+  await ctx.render('admin/indexer')
+})
+
+router.post('/indexer', async function (ctx) {
+  await Indexer.TriggerIndexUpdate(await Parameter.get('minCommonRatings'))
+  ctx.redirect('/admin/indexer')
 })
 
 export default function (mainRouter: KoaRouter) {
