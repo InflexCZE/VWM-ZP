@@ -4,56 +4,84 @@ import { Instance as RatingInstance } from '../models/def/rating'
 import { Instance as RangInstance } from '../models/def/rank'
 import * as Pearson from "./pearson"
 
-export async function UpdateIndex()
+export function TriggerIndexUpdate(MIN_COMMON_RATINGS = 0, BATCH_SIZE = 100)
 {
-    const users = (await User.findAll({attributes: ['id']})).map(x => x.id);
-    for (const x of users)
-    {
-      UpdateIndexFor(x, users);
-    }
-}
-
-interface ValuePair {
-  value: number
-  otherValue: number
+  return ExecuteForEachUser(BATCH_SIZE, user => UpdateIndexFor(user, MIN_COMMON_RATINGS, BATCH_SIZE));
 }
 
 async function GetCommonRatings(userId : number, otherUserId: number)
 {
+  interface ValuePair
+  {
+    value: number
+    otherValue: number
+  }
+
   const ret : ValuePair[] = await sequelize.query(`
     SELECT r1.value AS value, r2.value AS "otherValue" FROM "Ratings" r1
     JOIN "Ratings" r2 ON r2."movieId" = r1."movieId"
     WHERE r1."userId" = :userId AND r2."userId" = :otherUserId
   `, { type: sequelize.QueryTypes.SELECT, replacements: { userId, otherUserId } });
 
-  return ret;
-}
-
-async function UpdateIndexFor(targetUser : number, users : number[])
-{
-  for (const otherUser of users)
-  {
-      if(otherUser === targetUser)
-        continue;
-
-      if(targetUser > otherUser)
-        continue;
-
-      const ratings = await GetCommonRatings(otherUser, targetUser);
-      const rank = Pearson.ComputeCorrelationCoefficientFromRatings(ratings.map(x => x.value), ratings.map(x => x.otherValue));
-
-      async function Update(userId : number, otherUserId : number, rank : number)
-      {
-        const [instance, created] = await Rank.findOrCreate({where: {userId, otherUserId}, defaults:{ rank }});
-        if(created === false)
-        {
-          instance.update({rank});
-        }
-      }
-
-      Update(targetUser, otherUser, rank);
-      Update(otherUser, targetUser, rank);
+  return {
+    userRatings: ret.map(x => x.value),
+    otherRatings: ret.map(x => x.otherValue)
   }
 }
 
+async function UpdateDbIndex(userId : number, otherUserId : number, rank : number)
+{
+  const [instance, created] = await Rank.findOrCreate({where: {userId, otherUserId}, defaults:{ rank }});
 
+  if(created === false)
+    instance.update({rank});
+}
+
+function UpdateIndexFor(targetUser:number, MIN_COMMON_RATINGS:number, BATCH_SIZE:number)
+{
+  return ExecuteForEachUser(BATCH_SIZE, async function(otherUser)
+  {
+      const {userRatings, otherRatings} = await GetCommonRatings(otherUser, targetUser);
+      //Wut? ^ Why {} instead of []??? ^
+
+      let rank = 0;
+      if(userRatings.length >= MIN_COMMON_RATINGS)
+      {
+        rank = Pearson.ComputeCorrelationCoefficientFromRatings(userRatings, otherRatings);
+      }
+
+      UpdateDbIndex(targetUser, otherUser, rank);
+      UpdateDbIndex(otherUser, targetUser, rank);
+  }, {id: {gt: targetUser}});
+}
+
+//No async generator :(
+async function ExecuteForEachUser(BATCH_SIZE:number, action:(userBatch:number) => Promise<void>, filter?:any) //filter?:WhereOptions)
+{
+  const firedActions : Promise<void[]>[] = [];
+
+  let batchOffset = 0;
+  while(true)
+  {
+    const currentBatch = await User.findAll
+    (
+      {
+        where: filter, //Note: Not sure if optional parameter works like that
+        limit: BATCH_SIZE,
+        offset: batchOffset,
+
+        order: [['id']],
+        attributes: ['id']
+      }
+    );
+
+    batchOffset += BATCH_SIZE;
+
+    if(currentBatch.length == 0)
+      break;
+
+    firedActions.push(Promise.all(currentBatch.map(x => action(x.id))));
+  }
+
+  await Promise.all(firedActions);
+}

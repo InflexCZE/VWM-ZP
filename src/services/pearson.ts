@@ -69,7 +69,7 @@ export function ComputeCorrelationCoefficientFromRatings(ratingsX : number[], ra
     Assert(() => ratingsX.length == ratingsY.length);
 
     if(ratingsX.length == 0)
-        return -1;
+        return 0;
 
     const sampleMeanX = SampleMean(ratingsX);
     const sampleMeanY = SampleMean(ratingsY);
@@ -84,7 +84,11 @@ export function ComputeCorrelationCoefficientFromRatings(ratingsX : number[], ra
         sum += xPart * yPart;
     }
 
-    return sum / (ratingsX.length - 1);
+    let index = sum / (ratingsX.length - 1);
+    index = Math.min(Math.max(index, -1), 1);
+
+    //Normalize <-1, 1> to <0, 1>
+    return (index + 1) / 2;
 }
 
 export function MakeChartData(xRatings : RatingInstance[], yRatings : RatingInstance[]) : DataSet[]
