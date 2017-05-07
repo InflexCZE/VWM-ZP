@@ -119,6 +119,7 @@ router.get('/parameters', async function (ctx) {
   Object.assign(ctx.state, {
     minCommonRatings: await Parameter.get('minCommonRatings', 1),
     usersCount: await Parameter.get('usersCount', 10),
+    minRank: await Parameter.get('minRank', 0.5),
     moviesCount: await Parameter.get('moviesCount', 10)
   })
 
@@ -126,7 +127,7 @@ router.get('/parameters', async function (ctx) {
 })
 
 router.post('/parameters', async function (ctx) {
-  const names = ['minCommonRatings', 'usersCount', 'moviesCount']
+  const names = ['minCommonRatings', 'usersCount', 'minRank', 'moviesCount']
 
   for (const name of names) {
     const value = +ctx.request.body[name]
