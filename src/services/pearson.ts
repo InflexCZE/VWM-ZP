@@ -5,7 +5,6 @@ import { Instance as RatingInstance } from '../models/def/rating'
 export interface DataSet
 {
     label: string
-    hoverColor:string
     backgroundColor:string
     data: {x:number, y:number, r:number}[]
 }
@@ -104,8 +103,7 @@ export function MakeChartData(xRatings : RatingInstance[], yRatings : RatingInst
         {
             label: x.movie.name,
             data: [ {x: x.value, y: y.value, r: 15} ],
-            hoverColor: '#0066FF',
-            backgroundColor: '#0066FF'
+            backgroundColor: '#0099cc'
         };
     }
 

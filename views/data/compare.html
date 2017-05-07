@@ -1,0 +1,83 @@
+<h1>Srovnání s uživatelem <a href="/users/detail/<%= otherUser.id %>"><%= otherUser.name %></a></h1>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h2>Podobnost: <%= index.toFixed(10) %></h2>
+  </div>
+  <div class="panel-body">
+    <h3>Přehled rozložení stejných hodnocení:</h3>
+    <canvas id="chart" width="100" height="100"></canvas>
+  </div>
+  <div class="panel-footer">
+    <p class="text-info">V ideálním případě by měla hodnocení tvořit souvislou přímku od 0 do 5.</p>
+  </div>
+</div>
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h2>Nejlepší hodnocení uživatele:</h2>
+  </div>
+  <div class="panel-body">
+    <dl class="dl-horizontal">
+      <% for(const x of candidates) { %>
+        <dt><%- include(template('rating'), { rating: x.value }) %></dt>
+        <dd><a href="/movies/detail/<%= x.movie.id %>"><%= x.movie.name %></a></dd>
+      <% } %>
+    </dl>
+  </div>
+</div>
+
+<script>
+var ctx = document.getElementById('chart')
+var chart = new Chart(ctx, {
+  type: 'bubble',
+  data: {
+    datasets: <%- JSON.stringify(data) %>
+  },
+  options: {
+    elements: {
+      points: {
+        borderWidth: 1,
+        borderColor: 'rgb(0, 0, 0)'
+      }
+    },
+    scales: {
+      xAxes: [{
+        type: 'linear',
+        scaleLabel: {
+          display: true,
+          labelString: 'Vaše hodnocení'
+        },
+        ticks: {
+          stepSize: 1,
+          min: 0,
+          max: 5.1
+        }
+      }],
+      yAxes: [{
+        type: 'linear',
+        scaleLabel: {
+          display: true,
+          labelString: 'Hodnocení uživatele ' + <%- JSON.stringify(otherUser.name) %>
+        },
+        ticks: {
+          stepSize: 1,
+          min: 0,
+          max: 5.1,
+          padding: 10
+        }
+      }]
+    },
+    tooltips: {
+      mode: 'point',
+      displayColors: false,
+      callbacks: {
+        label: function (tooltipItem, data) {
+          return data.datasets[tooltipItem.datasetIndex].label + ' (' + tooltipItem.xLabel + ', ' + tooltipItem.yLabel + ')'
+        }
+      }
+    }
+  }
+})
+</script>

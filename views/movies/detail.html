@@ -11,6 +11,14 @@
         <%- include(template('rating'), { rating: average }) %>
       </div>
     </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h2>Rozložení hodnocení:</h2>
+      </div>
+      <div class="panel-body fa-3x">
+        <canvas id="chart" width="100" height="100"></canvas>
+      </div>
+    </div>
   </div>
   <div class="col col-sm-6 col-xs-12">
     <% if (user) { %>
@@ -55,3 +63,33 @@
     </div>
   </div>
 </div>
+
+<script>
+var ctx = document.getElementById('chart')
+var chart = new Chart(ctx, {
+  type: 'doughnut',
+  data: {
+    labels: [
+      '\u2606\u2606\u2606\u2606\u2606',
+      '\u2605\u2606\u2606\u2606\u2606',
+      '\u2605\u2605\u2606\u2606\u2606',
+      '\u2605\u2605\u2605\u2606\u2606',
+      '\u2605\u2605\u2605\u2605\u2606',
+      '\u2605\u2605\u2605\u2605\u2605',
+    ],
+    datasets: [
+      {
+        data: <%- JSON.stringify(chartData) %>,
+        backgroundColor: [
+          '#fb0007',
+          '#f38337',
+          '#fdb409',
+          '#ffff0b',
+          '#c3ff28',
+          '#5bff27',
+        ],
+      }
+    ]
+  }
+})
+</script>

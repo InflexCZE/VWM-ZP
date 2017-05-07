@@ -1,11 +1,43 @@
-<h1>VWM - Collaborative filtering</h1>
+<h1>Kolaborativní filtrování</h1>
 
-<h3>
-  TODO: Pavlicek&Zemlicka
-</h3>
-<image src="/images/Gitty.png">
-<h4>
-  GitHub repo:
-  <br>
-  <a target="_blank" href="https://github.com/InflexCZE/VWM-ZP">https://github.com/InflexCZE/VWM-ZP</a>
-</h4>
+<% if (user) { %>
+  <h2>Doporučené filmy</h2>
+
+  <% if (recommendations.length === 0) { %>
+    <p>Bohužel zatím nemáte žádná doporučení. Buď nemáte dostatečný počet ohodnocených filmů, nebo vaše hodnocení ještě nebylo zaindexováno.</p>
+  <% } %>
+
+  <div class="row">
+    <% for (const r of recommendations) { %>
+      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" style="height: 20em;">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <a href="/movies/detail/<%= r.id %>">
+              <h3><%= r.name %></h3>
+            </a>
+          </div>
+          <div class="panel-body">
+            <ul>
+              <li>Od: <a href="/users/detail/<%= r.otherUserId %>"><%= r.otherUserName %></a></li>
+              <li>Hodnocení: <%- include(template('rating'), r) %></li>
+              <li>Důležitost: <%= r.weight.toFixed(2) %></li>
+            </dl>
+          </div>
+          <div class="panel-footer">
+            <a href="/data/compare/<%= r.otherUserId %>">Srovnání s uživatelem</a>
+          </div>
+        </div>
+      </div>
+    <% } %>
+  </div>
+<% } %>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h2>Vytvořeno <strong>Radomírem Žemličkou</strong> a <strong>Martinem Pavlíčkem</strong></h2>
+  </div>
+  <div class="panel-body">
+    <img src="/images/Gitty.png">
+    <p class="lead">GitHub repo: <a target="_blank" href="https://github.com/InflexCZE/VWM-ZP">https://github.com/InflexCZE/VWM-ZP</a></p>
+  </div>
+</div>

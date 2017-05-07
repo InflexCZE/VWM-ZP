@@ -12,13 +12,15 @@ moviesController(router)
 import usersController from './controllers/users'
 usersController(router)
 
-import dataController from './controllers/data'
+import dataController, { getRecommendations } from './controllers/data'
 dataController(router)
 
 import adminController from './controllers/admin'
 adminController(router)
 
 router.get('/', async function (ctx, next) {
+  ctx.state.recommendations = ctx.user ? await getRecommendations(ctx.user.id) : null
+
   await ctx.render('homepage')
 })
 
