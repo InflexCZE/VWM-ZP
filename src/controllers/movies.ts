@@ -61,6 +61,15 @@ router.get('/detail/:id', async function (ctx) {
     }
   })).get('avg')
 
+  const choices = [0, 1, 2, 3, 4, 5]
+
+  const splitted = await Rating.findOne({
+    attributes: choices.map(x => [sequelize.fn('SUM', sequelize.literal(`CASE WHEN value = ${x} THEN 1 ELSE 0 END`)), `count${x}`]),
+    where: {
+      movieId: movie.id
+    }
+  })
+
   let userRating
   if (ctx.user) {
     userRating = await Rating.findOne({
@@ -75,7 +84,8 @@ router.get('/detail/:id', async function (ctx) {
     movie,
     average,
     ratings,
-    userRating
+    userRating,
+    chartData: choices.map(x => splitted.get(`count${x}`))
   })
 
   await ctx.render('movies/detail')
