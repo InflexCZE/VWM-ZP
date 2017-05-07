@@ -34,6 +34,38 @@ router.get('/', async function (ctx) {
   await ctx.render('homepage')
 })
 
+router.get('/movies', async function (ctx) {
+  await ctx.render('admin/movies')
+})
+
+router.post('/movies/create', async function (ctx) {
+  const { name } = <{ name: string }>ctx.request.body
+
+  if (name) {
+    await Movie.create({
+      name
+    })
+  }
+
+  ctx.redirect('/admin/movies')
+})
+
+router.post('/movies/delete', async function (ctx) {
+  const id = +ctx.request.body.id
+
+  if (id) {
+    await Movie.destroy({
+      where: { id }
+    })
+  }
+
+  ctx.redirect('/admin/movies')
+})
+
+router.get('/users', async function (ctx) {
+  await ctx.render('admin/movies')
+})
+
 export default function (mainRouter: KoaRouter) {
   mainRouter.use('/admin', router.routes())
 }

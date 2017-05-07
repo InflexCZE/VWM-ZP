@@ -1,0 +1,22 @@
+<h1>Filmy</h1>
+
+<h2>Nový film</h2>
+<form method="post" action="/admin/movies/create">
+  <div class="form-group">
+    <label for="name">Název filmu:</label>
+    <input type="text" name="name" class="form-control">
+  </div>
+
+  <button type="submit" class="btn btn-primary">Vytvořit</button>
+</form>
+
+<h2>Smazání</h2>
+
+<form method="post" action="/admin/movies/delete" onsubmit="return confirm('Opravdu chcete smazat tento film?')">
+  <div class="form-group">
+    <label for="id">ID filmu:</label>
+    <input type="text" name="id" class="form-control">
+  </div>
+
+  <button type="submit" class="btn btn-primary">Smazat</button>
+</form>
