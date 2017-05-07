@@ -1,6 +1,6 @@
 import * as KoaRouter from 'koa-router'
 import * as KoaAuth from 'koa-basic-auth'
-import { sequelize, User, Movie, Rating } from '../models'
+import { sequelize, User, Movie, Rating, Rank } from '../models'
 import config from '../config'
 
 const router = new KoaRouter()
@@ -54,16 +54,64 @@ router.post('/movies/delete', async function (ctx) {
   const id = +ctx.request.body.id
 
   if (id) {
-    await Movie.destroy({
-      where: { id }
-    })
+    while (true) {
+      await Rating.destroy({
+        where: {
+          movieId: id
+        }
+      })
+
+      try {
+        await Movie.destroy({
+          where: { id }
+        })
+
+        break
+      }
+      catch (err) {}
+    }
   }
 
   ctx.redirect('/admin/movies')
 })
 
 router.get('/users', async function (ctx) {
-  await ctx.render('admin/movies')
+  await ctx.render('admin/users')
+})
+
+router.post('/users/delete', async function (ctx) {
+  const id = +ctx.request.body.id
+
+  if (id) {
+    while (true) {
+      await Rating.destroy({
+        where: {
+          userId: id
+        }
+      })
+      await Rank.destroy({
+        where: {
+          userId: id
+        }
+      })
+      await Rank.destroy({
+        where: {
+          otherUserId: id
+        }
+      })
+
+      try {
+        await User.destroy({
+          where: { id }
+        })
+
+        break
+      }
+      catch (err) {}
+    }
+  }
+
+  ctx.redirect('/admin/users')
 })
 
 export default function (mainRouter: KoaRouter) {
