@@ -33,7 +33,7 @@ for (var i = 0; i < ranges.length; ++i) {
 
   range.__input = input
 
-  range.onchange = function () {
+  range.onchange = range.onmousemove = function () {
     this.__input.value = this.value
   }
   range.onchange()
