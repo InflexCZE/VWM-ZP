@@ -1,6 +1,52 @@
 import * as KoaRouter from 'koa-router'
 import { sequelize, User, Rating, Movie } from '../models'
 import * as Pearson from '../services/pearson'
+import * as Parameter from '../services/parameter'
+
+interface Recommendation {
+  id: number
+  name: string
+
+  otherUserId: number
+  otherUserName: string
+
+  rank: number
+  rating: number
+  weight: number
+}
+
+export async function getRecommendations(userId: number) {
+  const usersCount = await Parameter.get('usersCount')
+  const minRank = await Parameter.get('minRank')
+  const moviesCount = await Parameter.get('moviesCount')
+
+  const res: Recommendation[] = await sequelize.query(`
+    SELECT x.*, xu.name AS "otherUserName" FROM (
+      SELECT r."movieId" as id, m.name, rx."otherUserId", rx.rank, r.value AS rating, rx.rank * r.value AS weight,
+        ROW_NUMBER() OVER (PARTITION BY r."movieId", m.name ORDER BY rx.rank * r.value DESC) AS rn
+      FROM "Ratings" r
+      JOIN "Movies" m ON m.id = r."movieId"
+      JOIN (
+        SELECT rx."otherUserId", rx.rank FROM "Ranks" rx
+        WHERE rx."userId" = :userId AND rx.rank >= :minRank
+        ORDER BY rx.rank DESC
+        LIMIT :usersCount
+      ) rx ON r."userId" = rx."otherUserId"
+      WHERE NOT EXISTS (
+        SELECT 1 FROM "Ratings" ri
+        WHERE ri."userId" = :userId
+          AND ri."movieId" = r."movieId"
+      )
+      ORDER BY weight DESC
+    ) x
+    JOIN "Users" xu ON xu.id = x."otherUserId"
+    WHERE x.rn = 1
+    ORDER BY x.weight DESC
+    LIMIT :moviesCount
+  `, { type: sequelize.QueryTypes.SELECT, replacements: { userId, usersCount, minRank, moviesCount } })
+
+  return res
+}
 
 const router = new KoaRouter()
 
