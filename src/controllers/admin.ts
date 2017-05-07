@@ -33,7 +33,7 @@ router.use(async function (ctx, next) {
 })
 
 router.get('/', async function (ctx) {
-  await ctx.render('homepage')
+  ctx.redirect('/admin/parameters')
 })
 
 router.get('/movies', async function (ctx) {
