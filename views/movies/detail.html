@@ -1,7 +1,7 @@
 <h1>Detail filmu <strong><%= movie.name %></strong></h1>
 
 <div class="row">
-  <div class="col col-sm-6 col-xs-12">
+  <div class="col-sm-6 col-xs-12">
     <div class="panel <%= cond({ 'panel-success': average >= 4, 'panel-warning': average >= 2 && average < 4, 'panel-danger': average < 2 }) %>">
       <div class="panel-heading">
         <h2>Průměrné hodnocení:</h2>
@@ -20,7 +20,7 @@
       </div>
     </div>
   </div>
-  <div class="col col-sm-6 col-xs-12">
+  <div class="col-sm-6 col-xs-12">
     <% if (user) { %>
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -36,7 +36,7 @@
         <div class="panel-footer">
           <form method="post" action="/movies/rate/<%= movie.id %>">
             <% for (let i = 0; i <= 5; ++i) { %>
-              <div class="form-group">
+              <div class="radio">
                 <label>
                   <input type="radio" name="value" value="<%= i %>" <%= cond({ 'checked': userRating && userRating.value === i }) %>>
                   <%- include(template('rating'), { rating: i }) %>
