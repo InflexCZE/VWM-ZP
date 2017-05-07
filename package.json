@@ -13,6 +13,7 @@
     "server": "node build/index.js",
     "server:watch": "nodemon --watch build --inspect build/index.js",
     "crawler": "node build/scripts/crawler.js",
+    "indexer": "node build/scripts/indexer.js",
     "postinstall": "npm run build",
     "prestart": "npm run db:migrate",
     "start": "npm run server",
